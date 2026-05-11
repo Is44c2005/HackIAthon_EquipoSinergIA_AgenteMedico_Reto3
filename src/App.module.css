@@ -1,0 +1,124 @@
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(160deg, #F0FDFA 0%, #E0F2FE 100%);
+}
+
+/* Header */
+.header {
+  background: white;
+  border-bottom: 1px solid var(--color-border-light);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.headerInner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 2px 8px rgba(8, 145, 178, 0.3);
+}
+
+.title {
+  font-family: 'Figtree', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  line-height: 1;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  background: var(--color-status-bg);
+  border: 1px solid #BFDBFE;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* Main */
+.main {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+.chatCard {
+  width: 100%;
+  max-width: 760px;
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border-light);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 560px;
+  max-height: calc(100vh - 160px);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 12px 16px;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  border-top: 1px solid var(--color-border-light);
+  background: white;
+}
+
+@media (max-width: 600px) {
+  .main {
+    padding: 12px 0;
+  }
+
+  .chatCard {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    max-height: calc(100vh - 140px);
+  }
+
+  .headerInner {
+    padding: 12px 16px;
+  }
+
+  .title {
+    font-size: 1.05rem;
+  }
+}
