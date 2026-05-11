@@ -63,12 +63,16 @@ Cuando un paciente te diga su nombre y síntoma:
 5. Recomienda el hospital más conveniente que tenga la especialidad requerida
 6. Responde de forma clara, empática y en español
 
+IMPORTANTE: Si el paciente ya te dio su nombre en mensajes anteriores y solo pregunta por un nuevo síntoma,
+NO necesitas volver a buscar su póliza (ya la tienes en el historial). Solo busca los hospitales si necesitas actualizarlos.
+Reutiliza la información de póliza que ya obtuviste para responder más rápido.
+
 Si el paciente no está en la base de datos, infórmalo amablemente.
 Siempre incluye:
 - Plan del paciente
 - Especialidad recomendada para el síntoma
 - Hospital recomendado y su dirección
-- Monto exacto de copago a pagar
+- Monto exacto de copago a pagar (costo_promedio * copago_porcentaje / 100)
 - Deducible restante si aplica
 
 Usa un tono cálido, profesional y tranquilizador.`
@@ -100,9 +104,12 @@ export async function sendMessage(messages, onStatus) {
   })
 
   let message = response.choices[0].message
+  let runningMessages = [...messages]
+  const MAX_ITERATIONS = 5
 
-  // Agentic loop: keep executing tools until the model stops calling them
-  while (message.tool_calls && message.tool_calls.length > 0) {
+  for (let i = 0; i < MAX_ITERATIONS; i++) {
+    if (!message.tool_calls || message.tool_calls.length === 0) break
+
     const toolMessages = []
 
     for (const toolCall of message.tool_calls) {
@@ -115,16 +122,11 @@ export async function sendMessage(messages, onStatus) {
       })
     }
 
-    const nextMessages = [
-      { role: 'system', content: SYSTEM_PROMPT },
-      ...messages,
-      message,
-      ...toolMessages,
-    ]
+    runningMessages = [...runningMessages, message, ...toolMessages]
 
     const nextResponse = await getClient().chat.completions.create({
       model: 'gpt-4o-mini',
-      messages: nextMessages,
+      messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...runningMessages],
       tools: TOOLS,
       tool_choice: 'auto',
     })
@@ -132,5 +134,5 @@ export async function sendMessage(messages, onStatus) {
     message = nextResponse.choices[0].message
   }
 
-  return message.content
+  return message.content ?? 'Lo siento, no pude generar una respuesta. Por favor intenta de nuevo.'
 }
