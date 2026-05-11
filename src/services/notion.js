@@ -4,7 +4,12 @@ const HOSPITALS_DB_ID = import.meta.env.VITE_NOTION_HOSPITALS_DB_ID
 // All Notion calls go through Vite's dev-server proxy (/notion-api → api.notion.com).
 // The proxy injects the Authorization and Notion-Version headers automatically (see vite.config.js).
 async function notionPost(path, body) {
-  const res = await fetch(`/notion-api${path}`, {
+  const isDev = import.meta.env.DEV
+  const url = isDev
+    ? `/notion-api${path}`
+    : `/api/notion?path=${encodeURIComponent(path)}`
+
+  const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
